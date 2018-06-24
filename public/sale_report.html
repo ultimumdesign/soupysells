@@ -1,0 +1,66 @@
+<h2 class="m-3" ng-init="invItemToSaleServiceGetReport()">{{messages.titleReport}}</h2>
+<hr>
+<div ng-if="data.length>0" class="row">
+<div class="col-sm-12 w-100 pt-3 px-3">
+  <h4><p><strong>SALE REPORT</strong></p></h4>
+  <p><strong>Sale Date: </strong>{{data[0].saledate | date: 'MM-dd-yyyy'}}</p>
+  <p><strong>Sale ID: </strong>{{data[0].ID}}</p>
+  <p><strong>Selling Platform: </strong>{{data[0].sellingplatname}}</p>
+  <p><strong>Item Name: </strong>{{data[0].name}}</p>
+  <p><strong>Item Description: </strong>{{data[0].description}}</p>
+  <p><strong>Item Physical Location: </strong>{{data[0].physloc}}</p><br>
+
+  <div class="table-responsive">
+    <table class="table">
+    <caption>Accounting Summary</caption>
+    <thead class="bg-dark text-light">
+      <tr>
+        <th scope="col"></th>
+        <th scope="col">Line Description</th>
+        <th scope="col"></th>
+        <th scope="col">Amount</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th scope="row"></th>
+        <td>Item Price</td>
+        <td></td>
+        <td>{{-data[0].purchaseprice | currency:"$":2}}</td>
+      </tr>
+      <tr>
+        <th scope="row"></th>
+        <td>Item Tax</td>
+        <td></td>
+        <td>{{-data[0].purchasetax | currency:"$":2}}</td>
+      </tr>
+      <tr>
+        <th scope="row"></th>
+        <td>Platform Fee</td>
+        <td></td>
+        <td>{{-data[0].platformfee | currency:"$":2}}</td>
+      </tr>
+      <tr>
+        <th scope="row"></th>
+        <td>Sale Price</td>
+        <td></td>
+        <td>{{data[0].saleprice | currency:"$":2}}</td>
+      </tr>
+      <tr>
+        <th scope="row"></th>
+        <td>Shipping Price</td>
+        <td></td>
+        <td>{{-data[0].shippingprice | currency:"$":2}}</td>
+      </tr>
+      <tr class="table-info">
+        <th scope="row"></th>
+        <td></td>
+        <td><strong>Profit</td>
+        <td>{{data[0].saleprice-data[0].purchaseprice-data[0].purchasetax-
+        data[0].shippingprice-data[0].platformfee | currency:"$":2}}</td>
+      </tr>
+    </tbody>
+    </table>
+  </div><!--end responsive-->
+</div><!--end col-->
+</div><!--end row-->

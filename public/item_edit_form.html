@@ -1,0 +1,80 @@
+<div class="modal-body">
+<div class="row">
+<div class="col-sm-12 w-100 px-4">
+<form name="itemform">
+  <div class="form-group row">
+    <label class="col-sm-4 col-form-label">
+      <strong>Name:</strong></label>
+    <div class="col-sm-8">
+      <input type="text" class="form-control" ng-model="edited.name" required>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-sm-4 col-form-label">
+      <strong>Category:</strong></label>
+    <div class="col-sm-8">
+      <select class="form-control" ng-model="edited.fk_categoryID"
+      ng-options="category.ID as category.name for category in lists.categories"
+      required>
+      </select>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-sm-4 col-form-label">
+      <strong>Description:</strong></label>
+    <div class="col-sm-8">
+      <textarea type="text" class="form-control" ng-model="edited.description"
+        rows="5" required></textarea>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-sm-4 col-form-label">
+      <strong>Purchase Location:</strong></label>
+    <div class="col-sm-8">
+      <select class="form-control" ng-model="edited.fk_purchaselocID"
+      ng-options="purchaseloc.ID as purchaseloc.name for purchaseloc in lists.purchaseloc"
+      required>
+      </select>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-sm-4 col-form-label">
+      <strong>Purchase Price ($):</strong></label>
+    <div class="col-sm-4">
+      <input type="number"  step="any" class="form-control" ng-model="edited.purchaseprice"
+      required>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-sm-4 col-form-label">
+      <strong>Purchase Tax ($):</strong></label>
+    <div class="col-sm-4">
+      <input type="number" step="any" class="form-control" ng-model="edited.purchasetax"
+      required>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-sm-4 col-form-label">
+      <strong>Purchase Date:</strong></label>
+    <div class="col-sm-4">
+      <input type="date" class="form-control" ng-model="edited.purchasedate"
+      required>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-sm-4 col-form-label">
+      <strong>Storage Location:</strong></label>
+    <div class="col-sm-8">
+      <input type="text" class="form-control" ng-model="edited.physloc">
+    </div>
+  </div>
+</form>
+</div><!--end col-->
+</div><!--end row-->
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-secondary float-left"
+  ng-click="toggleEditModal()">Close</button>
+  <button type="button" class="btn btn-primary float-left"
+  ng-disabled="isEditedChanged()" ng-click="invItemServiceUpdate(edited)">Save Changes</button>
+</div>
