@@ -34,7 +34,7 @@
           </div>
           <div class="col-6">
             <select class="form-control form-control-sm"
-              ng-model="reportOption.dateFilter" ng-change="testFunc()"
+              ng-model="reportOption.dateFilter" ng-change="invMetricServiceGet()"
               ng-init="reportOption.dateFilter='Weekly'">
               <option>Weekly</option>
               <option>Monthly</option>
@@ -42,6 +42,24 @@
             </select>
             <span ng-init="testFunc()"></span>
           </div>
+          </div>
+          <div class="row my-3" ng-if="reports.data">
+            <div class="col-sm-6">
+              <div class="card">
+                <div class="card-body text-center">
+                  <h4 class="card-title">Items Sold</h4>
+                  <h2 class="card-text text-success">{{reports.data[0].sold}}</h2>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="card">
+                <div class="card-body text-center">
+                  <h4 class="card-title">Profit</h4>
+                  <h2 class="card-text text-success">{{reports.data[0].profit|currency}}</h2>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
         <div class="tab-pane" id="charts" role="tabpanel">
