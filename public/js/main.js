@@ -118,6 +118,12 @@ soupysells.service('metricService', function($http) {
 			return response.data
 		});
 	}
+  this.getItemsReport = function(dateFilter) {
+    let url = "/api/metric/itemsreport?dateFilter="+dateFilter;
+    return $http.get(url).then(function(response){
+      return response.data
+    });
+  }
 });
 /** CONTROLLER **/
 soupysells.controller('saleController', function($scope, $window, $route,
@@ -152,6 +158,19 @@ soupysells.controller('saleController', function($scope, $window, $route,
   $scope.invMetricServiceGet = function() {
     if ($scope.reportOption.typeFilter == "Sales") {
       metricService.getSalesReport($scope.reportOption.dateFilter)
+      .then(function(data){
+        if (data.error) {
+          //do something
+        }
+        else {
+          //assign something, do something
+          $scope.reports.data = data;
+          console.log($scope.reports.data);
+        }
+      });
+    }
+    else if ($scope.reportOption.typeFilter == "Items") {
+      metricService.getItemsReport($scope.reportOption.dateFilter)
       .then(function(data){
         if (data.error) {
           //do something

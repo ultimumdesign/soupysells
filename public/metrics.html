@@ -1,5 +1,4 @@
-<h2 class="m-3" >{{messages.titleMetrics}}
-<button class="btn btn-primary" ng-click="logVar()"></button></h2>
+<h2 class="m-3" >{{messages.titleMetrics}}</h2>
 <hr>
 <div class="row">
 <div class="col-sm-12 w-100 pt-3 px-3">
@@ -24,11 +23,13 @@
             ng-init="reportOption.typeFilter='Sales'">
             <li class="nav-item">
               <a class="nav-link active" data-toggle="pill" href=""
-              role="tab" ng-click="reportOption.typeFilter='Sales'">Sales</a>
+              role="tab" ng-click="reportOption.typeFilter='Sales';
+              invMetricServiceGet()">Sales</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" data-toggle="pill" href=""
-              role="tab" ng-click="reportOption.typeFilter='Items'">Items</a>
+              role="tab" ng-click="reportOption.typeFilter='Items';
+              invMetricServiceGet()">Items</a>
             </li>
           </ul>
           </div>
@@ -40,23 +41,28 @@
               <option>Monthly</option>
               <option>Annual</option>
             </select>
-            <span ng-init="testFunc()"></span>
+            <span ng-init="invMetricServiceGet()"></span>
           </div>
           </div>
           <div class="row my-3" ng-if="reports.data">
             <div class="col-sm-6">
-              <div class="card">
+              <div class="card m-1">
                 <div class="card-body text-center">
-                  <h4 class="card-title">Items Sold</h4>
-                  <h2 class="card-text text-success">{{reports.data[0].sold}}</h2>
+                  <h4 class="card-title">{{reportOption.typeFilter ==
+                    'Sales' ? 'Sales' : 'Purchases'}}</h4>
+                  <h2 class="card-text text-success">{{reportOption.typeFilter ==
+                    'Sales' ? reports.data[0].sold : reports.data[0].purchased}}</h2>
                 </div>
               </div>
             </div>
             <div class="col-sm-6">
-              <div class="card">
+              <div class="card m-1">
                 <div class="card-body text-center">
-                  <h4 class="card-title">Profit</h4>
-                  <h2 class="card-text text-success">{{reports.data[0].profit|currency}}</h2>
+                  <h4 class="card-title">{{reportOption.typeFilter ==
+                    'Sales' ? 'Profit' : 'Cost'}}</h4>
+                  <h2 class="card-text text-success">{{reportOption.typeFilter ==
+                    'Sales' ? reports.data[0].profit :
+                    reports.data[0].cost | currency}}</h2>
                 </div>
               </div>
             </div>

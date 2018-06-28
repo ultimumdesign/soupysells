@@ -88,14 +88,39 @@ module.exports = function(app) {
         case "Annual":
           dataArr = [moment().subtract(1, "years").format(), moment().format()];
       }
-      console.log(dataArr);
       let sql = `
         SELECT
-          SUM((saleprice - purchaseprice - purchasetax
-            - shippingprice - platformfee)) as profit,
+          IFNULL(SUM((saleprice - purchaseprice - purchasetax
+            - shippingprice - platformfee)),0) as profit,
           COUNT(*) as sold
         FROM soupysells.vw_salesreport
         WHERE (saledate BETWEEN ? AND ?)
+      `;
+      con.query(sql, dataArr, function (err, result, fields) {
+        if (err) throw err;
+        res.send(result)
+      });
+    });
+    //
+    app.get('/api/metric/itemsreport', function (req, res) {
+      let dateFilter = req.query.dateFilter;
+      let dataArr;
+      switch (dateFilter) {
+        case "Weekly":
+          dataArr = [moment().subtract(7, "days").format(), moment().format()];
+          break;
+        case "Monthly":
+          dataArr = [moment().subtract(1, "months").format(), moment().format()];
+          break;
+        case "Annual":
+          dataArr = [moment().subtract(1, "years").format(), moment().format()];
+      }
+      let sql = `
+        SELECT
+          IFNULL(SUM((purchaseprice + purchasetax)),0) as cost,
+          COUNT(*) as purchased
+        FROM soupysells.vw_items
+        WHERE (purchasedate BETWEEN ? AND ?)
       `;
       con.query(sql, dataArr, function (err, result, fields) {
         if (err) throw err;
