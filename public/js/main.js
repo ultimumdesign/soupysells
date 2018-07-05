@@ -110,9 +110,25 @@ soupysells.service('itemService', function($http) {
   }
 
 });
+/** SERVICE **/
+soupysells.service('metricService', function($http) {
+	this.getSalesReport = function(dateFilter) {
+    let url = "/api/metric/salesreport?dateFilter="+dateFilter;
+		return $http.get(url).then(function(response){
+			return response.data
+		});
+	}
+  this.getItemsReport = function(dateFilter) {
+    let url = "/api/metric/itemsreport?dateFilter="+dateFilter;
+    return $http.get(url).then(function(response){
+      return response.data
+    });
+  }
+});
 /** CONTROLLER **/
 soupysells.controller('saleController', function($scope, $window, $route,
-  listService, itemService, $timeout, itemToSaleService, $location) {
+  listService, itemService, $timeout, itemToSaleService, metricService,
+  $location) {
   $scope.messages.titleView = "Sales List";
   $scope.messages.titleAdd= "Add New Sale";
   $scope.messages.titleReport= "Soupy Sells";
@@ -122,6 +138,7 @@ soupysells.controller('saleController', function($scope, $window, $route,
   $scope.sales = {};
   $scope.states = {};
   $scope.reportOption = {};
+  $scope.reports = {};
 
   $scope.testData = [2,5,7];
   $scope.testLabel = ['a','b','c'];
@@ -138,6 +155,34 @@ soupysells.controller('saleController', function($scope, $window, $route,
       $scope.lists.sellingplat = data;
     }
   });
+  $scope.invMetricServiceGet = function() {
+    if ($scope.reportOption.typeFilter == "Sales") {
+      metricService.getSalesReport($scope.reportOption.dateFilter)
+      .then(function(data){
+        if (data.error) {
+          //do something
+        }
+        else {
+          //assign something, do something
+          $scope.reports.data = data;
+          console.log($scope.reports.data);
+        }
+      });
+    }
+    else if ($scope.reportOption.typeFilter == "Items") {
+      metricService.getItemsReport($scope.reportOption.dateFilter)
+      .then(function(data){
+        if (data.error) {
+          //do something
+        }
+        else {
+          //assign something, do something
+          $scope.reports.data = data;
+          console.log($scope.reports.data);
+        }
+      });
+    }
+  }
   $scope.invItemToSaleServiceGet = function() {
     itemToSaleService.get().then(function(data){
       if (data.error) {
