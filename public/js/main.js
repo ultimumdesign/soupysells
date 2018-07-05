@@ -8,6 +8,9 @@ soupysells.config(function($routeProvider, $locationProvider) {
   }).when("/newitem", {
 		templateUrl : "assets/item_add.html",
 		controller : "itemController"
+	}).when("/newbulk", {
+		templateUrl : "assets/item_addbulk.html",
+		controller : "itemController"
 	}).when("/items", {
 		templateUrl : "assets/item_view.html",
 		controller : "itemController"
@@ -306,9 +309,11 @@ soupysells.controller('itemController', function($scope, $window, $route,
   $rootScope) {
 	$scope.messages = {};
 	$scope.messages.titleAdd = "Add New Item";
+	$scope.messages.titleAdd = "Add Bulk Items";
 	$scope.messages.titleView = "Items List";
 	$scope.lists = {};
   $scope.items = {};
+  $scope.bulkItems = [];
   $scope.states = {
     archiveModal: false
   };
@@ -356,6 +361,13 @@ soupysells.controller('itemController', function($scope, $window, $route,
 			}
 		});
 	}
+  $scope.addBulkItem = function() {
+    $scope.bulkItems.push($scope.form);
+    console.log($scope.bulkItems);
+    $window.scrollTo(0,0);
+    $scope.form = {};
+    $scope.itemform.$touched = false;
+  }
   $scope.invItemServiceGet = function() {
     itemService.get().then(function(data){
       if (data.error) {
