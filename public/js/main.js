@@ -111,6 +111,7 @@ soupysells.service('itemService', function($http) {
       return response.data
     });
   }
+  this.bulkItems = [];
 
 });
 /** SERVICE **/
@@ -146,10 +147,6 @@ soupysells.controller('saleController', function($scope, $window, $route,
   $scope.testData = [2,5,7];
   $scope.testLabel = ['a','b','c'];
 
-  $scope.logVar = function() {
-    console.log($scope.reportOption.typeFilter);
-  }
-
   listService.getSellingplat().then(function(data){
     if (data.error) {
       //do something
@@ -158,6 +155,7 @@ soupysells.controller('saleController', function($scope, $window, $route,
       $scope.lists.sellingplat = data;
     }
   });
+
   $scope.invMetricServiceGet = function() {
     if ($scope.reportOption.typeFilter == "Sales") {
       metricService.getSalesReport($scope.reportOption.dateFilter)
@@ -168,7 +166,6 @@ soupysells.controller('saleController', function($scope, $window, $route,
         else {
           //assign something, do something
           $scope.reports.data = data;
-          console.log($scope.reports.data);
         }
       });
     }
@@ -181,7 +178,6 @@ soupysells.controller('saleController', function($scope, $window, $route,
         else {
           //assign something, do something
           $scope.reports.data = data;
-          console.log($scope.reports.data);
         }
       });
     }
@@ -313,10 +309,14 @@ soupysells.controller('itemController', function($scope, $window, $route,
 	$scope.messages.titleView = "Items List";
 	$scope.lists = {};
   $scope.items = {};
-  $scope.bulkItems = [];
   $scope.states = {
     archiveModal: false
   };
+  $scope.logVar = function() {
+    console.log(itemService.bulkItems);
+  }
+
+
   $rootScope.$on('$routeChangeStart', function() {
     $('.modal').modal('hide'); // hides all modals
     $('.modal-backdrop').remove();
@@ -362,11 +362,9 @@ soupysells.controller('itemController', function($scope, $window, $route,
 		});
 	}
   $scope.addBulkItem = function() {
-    $scope.bulkItems.push($scope.form);
-    console.log($scope.bulkItems);
+    itemService.bulkItems.push($scope.form);
     $window.scrollTo(0,0);
-    $scope.form = {};
-    $scope.itemform.$touched = false;
+    $route.reload();
   }
   $scope.invItemServiceGet = function() {
     itemService.get().then(function(data){
