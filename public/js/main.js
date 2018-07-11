@@ -1,4 +1,4 @@
-var soupysells = angular.module('soupysells', ['ngRoute', 'ngTouch', 'chart.js']);
+const soupysells = angular.module('soupysells', ['ngRoute', 'ngTouch', 'chart.js']);
 /** CONFIG **/
 soupysells.config(function($routeProvider, $locationProvider) {
   $routeProvider
@@ -27,6 +27,31 @@ soupysells.config(function($routeProvider, $locationProvider) {
 		templateUrl : "assets/metrics.html",
 		controller : "saleController"
 	});
+});
+/** CUSTOM DIRECTIVES **/
+soupysells.directive('bulkPopover', function (itemService) {
+    return {
+        restrict: 'A',
+        template: `<button type="button" class="btn btn-default">
+                  Bulk Items <span class="badge badge-light">
+                  {{counter.bulkItems}}</span>
+                  <span class="sr-only">unread messages</span>
+                  </button>`,
+        link: function (scope, el, attrs) {
+            scope.counter.bulkItems = itemService.bulkItems.length;
+            let retString = '';
+            itemService.bulkItems.forEach(function(element){
+              retString += element.name + '<br/>';
+            });
+
+            $(el).popover({
+                trigger: 'focus',
+                html: true,
+                content: retString,
+                placement: attrs.popoverPlacement
+            });
+        }
+    };
 });
 /** SERVICE **/
 soupysells.service('listService', function($http) {
@@ -129,6 +154,7 @@ soupysells.service('metricService', function($http) {
     });
   }
 });
+
 /** CONTROLLER **/
 soupysells.controller('saleController', function($scope, $window, $route,
   listService, itemService, $timeout, itemToSaleService, metricService,
@@ -243,13 +269,13 @@ soupysells.controller('saleController', function($scope, $window, $route,
     });
   }
   $scope.invListServicePostPlat = function() {
-    var addName = $scope.addSellingplat.name;
+    let addName = $scope.addSellingplat.name;
     listService.postPlat(addName).then(function(data){
       if (data.error) {
         //do something
       }
       else {
-        var postID = data.ID;
+        let postID = data.ID;
         listService.getSellingplat().then(function(data){
           if (data.error) {
             //do something
@@ -266,7 +292,7 @@ soupysells.controller('saleController', function($scope, $window, $route,
     });
   }
   $scope.checkAddExist = function(testList) {
-    var doesExist = false;
+    let doesExist = false;
     angular.forEach(testList, function(value, key) {
       if ($scope.addSellingplat) {
         if ($scope.addSellingplat.name.toUpperCase() == value.name.toUpperCase()) {
@@ -286,7 +312,7 @@ soupysells.controller('saleController', function($scope, $window, $route,
     element.toggle = !element.toggle;
   }
   function findObjectByKey(array, key, value) {
-    for (var i = 0; i < array.length; i++) {
+    for (let i = 0; i < array.length; i++) {
         if (array[i][key] === value) {
             return array[i];
         }
@@ -294,6 +320,7 @@ soupysells.controller('saleController', function($scope, $window, $route,
     return null;
   }
 });
+
 /** CONTROLLER **/
 soupysells.controller('indexController', function($scope, $window) {
 	$scope.messages = {};
@@ -309,6 +336,7 @@ soupysells.controller('itemController', function($scope, $window, $route,
 	$scope.messages.titleView = "Items List";
 	$scope.lists = {};
   $scope.items = {};
+  $scope.counter = {};
   $scope.states = {
     archiveModal: false
   };
@@ -366,6 +394,9 @@ soupysells.controller('itemController', function($scope, $window, $route,
     $window.scrollTo(0,0);
     $route.reload();
   }
+  $scope.bulkIsEmpty = function() {
+    return itemService.bulkItems.length>0;
+  }
   $scope.invItemServiceGet = function() {
     itemService.get().then(function(data){
       if (data.error) {
@@ -400,14 +431,14 @@ soupysells.controller('itemController', function($scope, $window, $route,
     });
   }
   $scope.invListServicePost = function(type) {
-    var listType = type;
-    var addName = type == 0 ? $scope.addcat.name : $scope.addpurchloc.name;
+    let listType = type;
+    let addName = type == 0 ? $scope.addcat.name : $scope.addpurchloc.name;
     listService.post(addName, type).then(function(data){
       if (data.error) {
         //do something
       }
       else {
-        var postID = data.ID;
+        let postID = data.ID;
         if (listType == 1) {
           listService.getPurchloc().then(function(data){
             if (data.error) {
@@ -481,7 +512,7 @@ soupysells.controller('itemController', function($scope, $window, $route,
     return angular.equals($scope.edited, $scope.editedCopy)
   }
   $scope.checkAddExist = function(testList, type) {
-    var doesExist = false;
+    let doesExist = false;
     if (type == 'purch') {
       angular.forEach(testList, function(value, key) {
         if ($scope.addpurchloc) {
@@ -517,7 +548,7 @@ soupysells.controller('itemController', function($scope, $window, $route,
     }
   }
   function findObjectByKey(array, key, value) {
-    for (var i = 0; i < array.length; i++) {
+    for (let i = 0; i < array.length; i++) {
         if (array[i][key] === value) {
             return array[i];
         }

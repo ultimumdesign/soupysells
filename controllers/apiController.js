@@ -195,7 +195,7 @@ module.exports = function(app) {
         let sql = 'INSERT INTO sales SET ?';
         con.query(sql, updateObj, function (err, result, fields) {
           if (err) throw err;
-          var insertID = result.insertId;
+          let insertID = result.insertId;
           con.query('UPDATE items SET isactive = 0 WHERE ID = ?', itemID,
             function (err, result, fields) {
                 if (err) throw err;
@@ -231,7 +231,7 @@ module.exports = function(app) {
           name: req.body.name
         }
         let sql = 'INSERT INTO category SET ?';
-        var insertID;
+        let insertID;
         con.query(sql, updateObj, function (err, result, fields) {
           if (err) throw err;
           let insertID = result.insertId
@@ -245,7 +245,7 @@ module.exports = function(app) {
           name: req.body.name
         }
         let sql = 'INSERT INTO purchaseloc SET ?';
-        var insertID;
+        let insertID;
         con.query(sql, updateObj, function (err, result, fields) {
           if (err) throw err;
           let insertID = result.insertId
@@ -259,7 +259,7 @@ module.exports = function(app) {
           name: req.body.name
         }
         let sql = 'INSERT INTO sellingplatform SET ?';
-        var insertID;
+        let insertID;
         con.query(sql, updateObj, function (err, result, fields) {
           if (err) throw err;
           let insertID = result.insertId

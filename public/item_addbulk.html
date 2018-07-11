@@ -1,6 +1,13 @@
-<h2 class="m-3">{{messages.titleAdd}}</h2><button ng-click="logVar()">test</button>
+<h2 class="m-3">{{messages.titleAdd}}</h2>
 <small ng-show="itemform.$invalid"
 class="text-danger m-3">All Fields Required</small>
+<div ng-if="bulkIsEmpty()" class="row my-2 ml-1">
+  <div class="col-sm-12">
+    <div>
+      <span bulk-popover popover-placement="right"></span>
+    </div>
+  </div>
+</div>
 <hr>
 <div class="row">
 <div class="col-sm-12 w-100 pt-3 px-3">

@@ -37,9 +37,9 @@
             <select class="form-control form-control-sm"
               ng-model="reportOption.dateFilter" ng-change="invMetricServiceGet()"
               ng-init="reportOption.dateFilter='Weekly'">
-              <option>Weekly</option>
-              <option>Monthly</option>
-              <option>Annual</option>
+              <option value="Weekly">Last 7 Days</option>
+              <option value="Monthly">Last 30 Days</option>
+              <option value="Annual">Last 1 Year</option>
             </select>
             <span ng-init="invMetricServiceGet()"></span>
           </div>
