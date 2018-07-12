@@ -32,22 +32,12 @@ soupysells.config(function($routeProvider, $locationProvider) {
 soupysells.directive('bulkPopover', function (itemService) {
     return {
         restrict: 'A',
-        template: `<button type="button" class="btn btn-default">
-                  Bulk Items <span class="badge badge-light">
-                  {{counter.bulkItems}}</span>
-                  <span class="sr-only">unread messages</span>
-                  </button>`,
+        template: '<span>{{test}}</span',
         link: function (scope, el, attrs) {
-            scope.counter.bulkItems = itemService.bulkItems.length;
-            let retString = '';
-            itemService.bulkItems.forEach(function(element){
-              retString += element.name + '<br/>';
-            });
-
             $(el).popover({
                 trigger: 'focus',
                 html: true,
-                content: retString,
+                content: '',
                 placement: attrs.popoverPlacement
             });
         }
@@ -136,8 +126,6 @@ soupysells.service('itemService', function($http) {
       return response.data
     });
   }
-  this.bulkItems = [];
-
 });
 /** SERVICE **/
 soupysells.service('metricService', function($http) {
@@ -340,10 +328,6 @@ soupysells.controller('itemController', function($scope, $window, $route,
   $scope.states = {
     archiveModal: false
   };
-  $scope.logVar = function() {
-    console.log(itemService.bulkItems);
-  }
-
 
   $rootScope.$on('$routeChangeStart', function() {
     $('.modal').modal('hide'); // hides all modals
@@ -389,14 +373,6 @@ soupysells.controller('itemController', function($scope, $window, $route,
 			}
 		});
 	}
-  $scope.addBulkItem = function() {
-    itemService.bulkItems.push($scope.form);
-    $window.scrollTo(0,0);
-    $route.reload();
-  }
-  $scope.bulkIsEmpty = function() {
-    return itemService.bulkItems.length>0;
-  }
   $scope.invItemServiceGet = function() {
     itemService.get().then(function(data){
       if (data.error) {
