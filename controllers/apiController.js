@@ -81,12 +81,10 @@ module.exports = function(app) {
       //get month values
       let sql = `
         SELECT
-          SUM(saleprice - purchaseprice - purchasetax - shippingprice) as taxable,
-          ((SUM(saleprice - purchaseprice - purchasetax - shippingprice)) * .2) as tax
+          SUM(saleprice - purchaseprice - purchasetax - shippingprice - platformfee) as taxable,
+          ((SUM(saleprice - purchaseprice - purchasetax - shippingprice - platformfee)) * .2) as tax
         FROM soupysells.vw_salesreport
         WHERE
-          saleprice > 0
-          AND
           MONTH(saledate) = ?
           AND
           YEAR(saledate) = ?
@@ -96,11 +94,9 @@ module.exports = function(app) {
         let tax = result[0].tax;
         let taxable = result[0].taxable;
         sql = `
-          SELECT ((SUM(saleprice - purchaseprice - purchasetax - shippingprice)) * .2) as ytd
+          SELECT ((SUM(saleprice - purchaseprice - purchasetax - shippingprice - platformfee)) * .2) as ytd
           FROM soupysells.vw_salesreport
           WHERE
-            saleprice > 0
-            AND
           	YEAR(saledate) = ?
         `
         con.query(sql, dateYear, function (err, result, fields) {
