@@ -1,4 +1,5 @@
 const soupysells = angular.module('soupysells', ['ngRoute', 'ngTouch', 'chart.js']);
+soupysells.constant("moment", moment);
 /** CONFIG **/
 soupysells.config(function($routeProvider, $locationProvider) {
   $routeProvider
@@ -135,8 +136,15 @@ soupysells.service('metricService', function($http) {
 			return response.data
 		});
 	}
+  this.getTaxes= function(dateMonth, dateYear) {
+    let url = "/api/metric/taxreport?dateMonth="+dateMonth+"&dateYear="+
+    dateYear;
+    return $http.get(url).then(function(response){
+      return response.data
+    });
+  }
   this.getItemsReport = function(dateFilter) {
-    let url = "/api/metric/itemsreport?dateFilter="+dateFilter;
+    let url = "/api/metric/itemsreport?dateMonth="+dateMonth;
     return $http.get(url).then(function(response){
       return response.data
     });
@@ -146,7 +154,7 @@ soupysells.service('metricService', function($http) {
 /** CONTROLLER **/
 soupysells.controller('saleController', function($scope, $window, $route,
   listService, itemService, $timeout, itemToSaleService, metricService,
-  $location) {
+  $location, moment) {
   $scope.messages.titleView = "Sales List";
   $scope.messages.titleAdd= "Add New Sale";
   $scope.messages.titleReport= "Soupy Sells";
@@ -155,6 +163,11 @@ soupysells.controller('saleController', function($scope, $window, $route,
   $scope.lists = {};
   $scope.sales = {};
   $scope.states = {};
+
+  $scope.taxes = {};
+  $scope.taxOption = {
+    dateFilter: new Date()
+  };
   $scope.reportOption = {};
   $scope.reports = {};
 
@@ -169,7 +182,20 @@ soupysells.controller('saleController', function($scope, $window, $route,
       $scope.lists.sellingplat = data;
     }
   });
-
+  $scope.invMetricServiceGetTax = function() {
+    let dateMonth = moment($scope.taxOption.dateFilter).get('month')+1;
+    let dateYear = moment($scope.taxOption.dateFilter).get('year');
+    metricService.getTaxes(dateMonth, dateYear)
+    .then(function(data){
+      if (data.error) {
+        //do something
+      }
+      else {
+        //assign something, do something
+        $scope.taxes.data = data;
+      }
+    });
+  }
   $scope.invMetricServiceGet = function() {
     if ($scope.reportOption.typeFilter == "Sales") {
       metricService.getSalesReport($scope.reportOption.dateFilter)

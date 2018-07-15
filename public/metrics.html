@@ -6,7 +6,10 @@
     <div class="card-header pb-0">
       <ul class="nav nav-tabs border-0" role="tablist">
         <li class="nav-item">
-          <a class="nav-link active" data-toggle="tab" data-target="#reports" role="tab">Reports</a>
+          <a class="nav-link active" data-toggle="tab" data-target="#taxes" role="tab">Taxes</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" data-toggle="tab" data-target="#reports" role="tab">Reports</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" data-toggle="tab" data-target="#charts" role="tab">Charts</a>
@@ -15,7 +18,31 @@
     </div>
     <div class="card-body">
       <div class="tab-content">
-        <div class="tab-pane active" id="reports" role="tabpanel">
+        <div class="tab-pane active" id="taxes" role="tabpanel">
+          <div class="form-group row">
+            <label class="col-sm-2 col-form-label">
+              <strong>For the Month:</strong></label>
+            <div class="col-sm-4">
+              <input type="month" class="form-control"
+              ng-model="taxOption.dateFilter" ng-change="invMetricServiceGetTax()">
+              <span ng-init="invMetricServiceGetTax()"></span>
+            </div>
+          </div>
+          <div ng-if="true" class="row">
+            <div class="col-sm-12 w-100 pt-3 px-5">
+              <h4><p><strong>TAX REPORT</strong></p></h4>
+              <hr>
+              <p><strong>Taxable Amount: </strong><span class="float-right">
+                {{taxes.data.taxable | currency}}</span></p>
+              <p><strong>Tax: </strong><span class="float-right">
+                {{taxes.data.tax | currency}}</span></p>
+              <hr>
+              <p class="text-muted"><strong>Tax YTD: </strong><span class="float-right">
+                {{taxes.data.ytd | currency}}</span></p>
+            </div><!--end col-->
+          </div><!--end row-->
+        </div>
+        <div class="tab-pane" id="reports" role="tabpanel">
           <!-- reports options -->
           <div class="row">
           <div class="col-6">
