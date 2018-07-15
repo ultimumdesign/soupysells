@@ -144,7 +144,7 @@ soupysells.service('metricService', function($http) {
     });
   }
   this.getItemsReport = function(dateFilter) {
-    let url = "/api/metric/itemsreport?dateMonth="+dateMonth;
+    let url = "/api/metric/itemsreport?dateFilter="+dateFilter;
     return $http.get(url).then(function(response){
       return response.data
     });
