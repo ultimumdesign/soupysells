@@ -1,4 +1,5 @@
-var soupysells = angular.module('soupysells', ['ngRoute', 'ngTouch', 'chart.js']);
+const soupysells = angular.module('soupysells', ['ngRoute', 'ngTouch', 'chart.js']);
+soupysells.constant("moment", moment);
 /** CONFIG **/
 soupysells.config(function($routeProvider, $locationProvider) {
   $routeProvider
@@ -7,6 +8,9 @@ soupysells.config(function($routeProvider, $locationProvider) {
 		controller : "indexController"
   }).when("/newitem", {
 		templateUrl : "assets/item_add.html",
+		controller : "itemController"
+	}).when("/newbulk", {
+		templateUrl : "assets/item_addbulk.html",
 		controller : "itemController"
 	}).when("/items", {
 		templateUrl : "assets/item_view.html",
@@ -24,6 +28,21 @@ soupysells.config(function($routeProvider, $locationProvider) {
 		templateUrl : "assets/metrics.html",
 		controller : "saleController"
 	});
+});
+/** CUSTOM DIRECTIVES **/
+soupysells.directive('bulkPopover', function (itemService) {
+    return {
+        restrict: 'A',
+        template: '<span>{{test}}</span',
+        link: function (scope, el, attrs) {
+            $(el).popover({
+                trigger: 'focus',
+                html: true,
+                content: '',
+                placement: attrs.popoverPlacement
+            });
+        }
+    };
 });
 /** SERVICE **/
 soupysells.service('listService', function($http) {
@@ -108,7 +127,6 @@ soupysells.service('itemService', function($http) {
       return response.data
     });
   }
-
 });
 /** SERVICE **/
 soupysells.service('metricService', function($http) {
@@ -118,6 +136,13 @@ soupysells.service('metricService', function($http) {
 			return response.data
 		});
 	}
+  this.getTaxes= function(dateMonth, dateYear) {
+    let url = "/api/metric/taxreport?dateMonth="+dateMonth+"&dateYear="+
+    dateYear;
+    return $http.get(url).then(function(response){
+      return response.data
+    });
+  }
   this.getItemsReport = function(dateFilter) {
     let url = "/api/metric/itemsreport?dateFilter="+dateFilter;
     return $http.get(url).then(function(response){
@@ -125,10 +150,11 @@ soupysells.service('metricService', function($http) {
     });
   }
 });
+
 /** CONTROLLER **/
 soupysells.controller('saleController', function($scope, $window, $route,
   listService, itemService, $timeout, itemToSaleService, metricService,
-  $location) {
+  $location, moment) {
   $scope.messages.titleView = "Sales List";
   $scope.messages.titleAdd= "Add New Sale";
   $scope.messages.titleReport= "Soupy Sells";
@@ -137,15 +163,16 @@ soupysells.controller('saleController', function($scope, $window, $route,
   $scope.lists = {};
   $scope.sales = {};
   $scope.states = {};
+
+  $scope.taxes = {};
+  $scope.taxOption = {
+    dateFilter: new Date()
+  };
   $scope.reportOption = {};
   $scope.reports = {};
 
   $scope.testData = [2,5,7];
   $scope.testLabel = ['a','b','c'];
-
-  $scope.logVar = function() {
-    console.log($scope.reportOption.typeFilter);
-  }
 
   listService.getSellingplat().then(function(data){
     if (data.error) {
@@ -155,6 +182,20 @@ soupysells.controller('saleController', function($scope, $window, $route,
       $scope.lists.sellingplat = data;
     }
   });
+  $scope.invMetricServiceGetTax = function() {
+    let dateMonth = moment($scope.taxOption.dateFilter).get('month')+1;
+    let dateYear = moment($scope.taxOption.dateFilter).get('year');
+    metricService.getTaxes(dateMonth, dateYear)
+    .then(function(data){
+      if (data.error) {
+        //do something
+      }
+      else {
+        //assign something, do something
+        $scope.taxes.data = data;
+      }
+    });
+  }
   $scope.invMetricServiceGet = function() {
     if ($scope.reportOption.typeFilter == "Sales") {
       metricService.getSalesReport($scope.reportOption.dateFilter)
@@ -165,7 +206,6 @@ soupysells.controller('saleController', function($scope, $window, $route,
         else {
           //assign something, do something
           $scope.reports.data = data;
-          console.log($scope.reports.data);
         }
       });
     }
@@ -178,7 +218,6 @@ soupysells.controller('saleController', function($scope, $window, $route,
         else {
           //assign something, do something
           $scope.reports.data = data;
-          console.log($scope.reports.data);
         }
       });
     }
@@ -244,13 +283,13 @@ soupysells.controller('saleController', function($scope, $window, $route,
     });
   }
   $scope.invListServicePostPlat = function() {
-    var addName = $scope.addSellingplat.name;
+    let addName = $scope.addSellingplat.name;
     listService.postPlat(addName).then(function(data){
       if (data.error) {
         //do something
       }
       else {
-        var postID = data.ID;
+        let postID = data.ID;
         listService.getSellingplat().then(function(data){
           if (data.error) {
             //do something
@@ -267,7 +306,7 @@ soupysells.controller('saleController', function($scope, $window, $route,
     });
   }
   $scope.checkAddExist = function(testList) {
-    var doesExist = false;
+    let doesExist = false;
     angular.forEach(testList, function(value, key) {
       if ($scope.addSellingplat) {
         if ($scope.addSellingplat.name.toUpperCase() == value.name.toUpperCase()) {
@@ -287,7 +326,7 @@ soupysells.controller('saleController', function($scope, $window, $route,
     element.toggle = !element.toggle;
   }
   function findObjectByKey(array, key, value) {
-    for (var i = 0; i < array.length; i++) {
+    for (let i = 0; i < array.length; i++) {
         if (array[i][key] === value) {
             return array[i];
         }
@@ -295,6 +334,7 @@ soupysells.controller('saleController', function($scope, $window, $route,
     return null;
   }
 });
+
 /** CONTROLLER **/
 soupysells.controller('indexController', function($scope, $window) {
 	$scope.messages = {};
@@ -306,12 +346,15 @@ soupysells.controller('itemController', function($scope, $window, $route,
   $rootScope) {
 	$scope.messages = {};
 	$scope.messages.titleAdd = "Add New Item";
+	$scope.messages.titleAdd = "Add Bulk Items";
 	$scope.messages.titleView = "Items List";
 	$scope.lists = {};
   $scope.items = {};
+  $scope.counter = {};
   $scope.states = {
     archiveModal: false
   };
+
   $rootScope.$on('$routeChangeStart', function() {
     $('.modal').modal('hide'); // hides all modals
     $('.modal-backdrop').remove();
@@ -390,14 +433,14 @@ soupysells.controller('itemController', function($scope, $window, $route,
     });
   }
   $scope.invListServicePost = function(type) {
-    var listType = type;
-    var addName = type == 0 ? $scope.addcat.name : $scope.addpurchloc.name;
+    let listType = type;
+    let addName = type == 0 ? $scope.addcat.name : $scope.addpurchloc.name;
     listService.post(addName, type).then(function(data){
       if (data.error) {
         //do something
       }
       else {
-        var postID = data.ID;
+        let postID = data.ID;
         if (listType == 1) {
           listService.getPurchloc().then(function(data){
             if (data.error) {
@@ -471,7 +514,7 @@ soupysells.controller('itemController', function($scope, $window, $route,
     return angular.equals($scope.edited, $scope.editedCopy)
   }
   $scope.checkAddExist = function(testList, type) {
-    var doesExist = false;
+    let doesExist = false;
     if (type == 'purch') {
       angular.forEach(testList, function(value, key) {
         if ($scope.addpurchloc) {
@@ -507,7 +550,7 @@ soupysells.controller('itemController', function($scope, $window, $route,
     }
   }
   function findObjectByKey(array, key, value) {
-    for (var i = 0; i < array.length; i++) {
+    for (let i = 0; i < array.length; i++) {
         if (array[i][key] === value) {
             return array[i];
         }

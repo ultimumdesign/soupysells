@@ -75,6 +75,48 @@ module.exports = function(app) {
       });
     });
     //
+    app.get('/api/metric/taxreport', function (req, res) {
+      let dateMonth = req.query.dateMonth;
+      let dateYear = req.query.dateYear;
+      //get month values
+      let sql = `
+        SELECT
+          SUM(saleprice - purchaseprice - purchasetax - shippingprice) as taxable,
+          ((SUM(saleprice - purchaseprice - purchasetax - shippingprice)) * .2) as tax
+        FROM soupysells.vw_salesreport
+        WHERE
+          saleprice > 0
+          AND
+          MONTH(saledate) = ?
+          AND
+          YEAR(saledate) = ?
+      `;
+      con.query(sql, [dateMonth, dateYear], function (err, result, fields) {
+        if (err) throw err;
+        let tax = result[0].tax;
+        let taxable = result[0].taxable;
+        sql = `
+          SELECT ((SUM(saleprice - purchaseprice - purchasetax - shippingprice)) * .2) as ytd
+          FROM soupysells.vw_salesreport
+          WHERE
+            saleprice > 0
+            AND
+          	YEAR(saledate) = ?
+        `
+        con.query(sql, dateYear, function (err, result, fields) {
+          if (err) throw err;
+          let ytd = result[0].ytd;
+          res.send(JSON.stringify(
+            {
+              tax: tax,
+              taxable: taxable,
+              ytd: ytd
+            }
+          ));
+        });
+      });
+    });
+    //
     app.get('/api/metric/salesreport', function (req, res) {
       let dateFilter = req.query.dateFilter;
       let dataArr;
@@ -195,12 +237,12 @@ module.exports = function(app) {
         let sql = 'INSERT INTO sales SET ?';
         con.query(sql, updateObj, function (err, result, fields) {
           if (err) throw err;
-          var insertID = result.insertId;
+          let insertID = result.insertId;
           con.query('UPDATE items SET isactive = 0 WHERE ID = ?', itemID,
             function (err, result, fields) {
-                if (err) throw err;
-                res.send(JSON.stringify({ ID: insertID }));
-            });
+              if (err) throw err;
+              res.send(JSON.stringify({ ID: insertID }));
+          });
         });
       }
     })
@@ -231,7 +273,7 @@ module.exports = function(app) {
           name: req.body.name
         }
         let sql = 'INSERT INTO category SET ?';
-        var insertID;
+        let insertID;
         con.query(sql, updateObj, function (err, result, fields) {
           if (err) throw err;
           let insertID = result.insertId
@@ -245,7 +287,7 @@ module.exports = function(app) {
           name: req.body.name
         }
         let sql = 'INSERT INTO purchaseloc SET ?';
-        var insertID;
+        let insertID;
         con.query(sql, updateObj, function (err, result, fields) {
           if (err) throw err;
           let insertID = result.insertId
@@ -259,7 +301,7 @@ module.exports = function(app) {
           name: req.body.name
         }
         let sql = 'INSERT INTO sellingplatform SET ?';
-        var insertID;
+        let insertID;
         con.query(sql, updateObj, function (err, result, fields) {
           if (err) throw err;
           let insertID = result.insertId
