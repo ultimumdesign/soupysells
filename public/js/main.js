@@ -339,6 +339,10 @@ soupysells.controller('saleController', function($scope, $window, $route,
 soupysells.controller('indexController', function($scope, $window) {
 	$scope.messages = {};
 	$scope.messages.welcome = "Welcome to Soupy Sells!";
+  $scope.jqueryToggleCollapse = function() {
+    let isShown = $("#navbarSupportedContent").hasClass("show");
+    if (isShown) $("#navbarSupportedContent").removeClass("show");
+  }
 });
 /** CONTROLLER **/
 soupysells.controller('itemController', function($scope, $window, $route,

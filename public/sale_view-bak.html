@@ -1,5 +1,5 @@
 <h2 class="m-3" ng-bind="messages.titleView"
-  ng-init="invItemServiceGet()"></h2>
+  ng-init="invItemToSaleServiceGet()"></h2>
 <form class="m-3">
   <div class="form-group row">
     <label class="col-sm-2 col-form-label">
@@ -10,24 +10,36 @@
   </div>
 </form>
 <div class="row">
-<div class="col-sm-12 p-1">
-  <div class="row m-2" ng-repeat="item in items.itemData | filter:
-  filter.search">
-    <div class="card col-sm-12">
-      <div class="card-body">
-        <h5 class="card-title">{{item.name}}</h5>
-        <h6 class="card-subtitle mb-2 text-muted">
-          {{item.categoryName}}</h6>
-        <p class="card-text">{{item.description}}</p>
-        <a href="" ng-click="toggleEditModal(item)" class="card-link">View Details</a>
-      </div>
-    </div>
-  </div>
+<div class="col-sm-12 p-3">
+<div class="table-responsive-md">
+<table class="table table-bordered table-hover table-striped">
+  <thead class="bg-warning">
+    <tr>
+      <th scope="col">Sale ID</th>
+      <th scope="col">Name</th>
+      <th scope="col">Description</th>
+      <th scope="col">Platform</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr ng-repeat="item in sales.saleData | filter: filter.search"
+    ng-swipe-right="toggleFilter(item)">
+      <th ng-hide="item.toggle" scope="row">{{item.ID}}</th>
+      <th ng-show="item.toggle"><i class="fas fa-search fa-2x text-danger"
+        ng-click="viewSaleReport(item.ID)">
+      </i></td>
+      <td>{{item.name}}</td>
+      <td>{{item.description}}</td>
+      <td>{{item.sellingplatname}}</td>
+    </tr>
+  </tbody>
+</table>
+</div><!-- end resp -->
 </div>
 </div>
 
 <!-- Edit Modal -->
-<div class="modal" id="editModal" tabindex="-1" role="dialog"
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog"
 aria-labelledby="archiveModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
@@ -36,8 +48,7 @@ aria-labelledby="archiveModalLabel" aria-hidden="true">
         id="archiveModalLabel">Item ID: {{edited.ID}}</h5>
         <i class="fas fa-archive fa-2x text-light mr-3 ml-2"
         ng-click="toggleConfirmModal()"></i>
-        <i class="fas fa-tag fa-2x text-danger mr-3"
-        ng-click="invItemToSaleService()"></i>
+        <i class="fas fa-tag fa-2x text-danger mr-3"></i>
         <button type="button" class="close text-light"
         ng-click="toggleEditModal()" aria-label="Close">
           <span aria-hidden="true">&times;</span>
