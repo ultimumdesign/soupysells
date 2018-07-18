@@ -13,13 +13,16 @@
 <div class="col-sm-12 p-1">
   <div class="row m-2" ng-repeat="item in items.itemData | filter:
   filter.search">
-    <div class="card col-sm-12">
+    <div class="card col-sm-12 p-0">
       <div class="card-body">
         <h5 class="card-title">{{item.name}}</h5>
         <h6 class="card-subtitle mb-2 text-muted">
           {{item.categoryName}}</h6>
         <p class="card-text">{{item.description}}</p>
         <a href="" ng-click="toggleEditModal(item)" class="card-link">View Details</a>
+      </div>
+      <div class="card-footer text-muted">
+        <small>Purchase Date: {{item.purchasedate | date}}</small>
       </div>
     </div>
   </div>
