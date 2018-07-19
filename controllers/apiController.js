@@ -55,6 +55,7 @@ module.exports = function(app) {
       let sql = `
         SELECT *
         FROM vw_salesreport
+        ORDER by saledate DESC
       `;
       con.query(sql, function (err, result, fields) {
         if (err) throw err;
@@ -171,6 +172,7 @@ module.exports = function(app) {
         SELECT *
         FROM vw_items
         WHERE isactive = 1
+        ORDER BY purchasedate DESC
       `;
       con.query(sql, function (err, result, fields) {
         if (err) throw err;

@@ -10,31 +10,22 @@
   </div>
 </form>
 <div class="row">
-<div class="col-sm-12 p-3">
-<div class="table-responsive-md">
-<table class="table table-bordered table-hover table-striped">
-  <thead class="bg-warning">
-    <tr>
-      <th scope="col">Sale ID</th>
-      <th scope="col">Name</th>
-      <th scope="col">Description</th>
-      <th scope="col">Platform</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr ng-repeat="item in sales.saleData | filter: filter.search"
-    ng-swipe-right="toggleFilter(item)">
-      <th ng-hide="item.toggle" scope="row">{{item.ID}}</th>
-      <th ng-show="item.toggle"><i class="fas fa-search fa-2x text-danger"
-        ng-click="viewSaleReport(item.ID)">
-      </i></td>
-      <td>{{item.name}}</td>
-      <td>{{item.description}}</td>
-      <td>{{item.sellingplatname}}</td>
-    </tr>
-  </tbody>
-</table>
-</div><!-- end resp -->
+<div class="col-sm-12 p-1">
+  <div class="row m-2" ng-repeat="item in sales.saleData | filter:
+  filter.search">
+    <div class="card col-sm-12 p-0">
+      <div class="card-body">
+        <h5 class="card-title">{{item.name}}</h5>
+        <h6 class="card-subtitle mb-2 text-muted">
+          {{item.sellingplatname}}</h6>
+        <p class="card-text">{{item.description}}</p>
+        <a href="" ng-click="viewSaleReport(item.ID)" class="card-link">View Details</a>
+      </div>
+      <div class="card-footer text-muted">
+        <small>Sale Date: {{item.saledate | date}}</small>
+      </div>
+    </div>
+  </div>
 </div>
 </div>
 
