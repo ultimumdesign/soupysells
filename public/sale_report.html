@@ -2,7 +2,8 @@
 <hr>
 <div ng-if="data.length>0" class="row">
 <div class="col-sm-12 w-100 pt-3 px-3">
-  <h4><p><strong>SALE REPORT</strong></p></h4>
+  <h4><p><strong>SALE REPORT</strong> <i class="fas fa-edit text-danger mr-3"
+    ng-click="toggleEditModal(data[0])"></i></p></h4>
   <p><strong>Sale Date: </strong>{{data[0].saledate | date: 'MM-dd-yyyy'}}</p>
   <p><strong>Sale ID: </strong>{{data[0].ID}}</p>
   <p><strong>Selling Platform: </strong>{{data[0].sellingplatname}}</p>
@@ -64,3 +65,24 @@
   </div><!--end responsive-->
 </div><!--end col-->
 </div><!--end row-->
+
+<!-- Edit Modal -->
+<div class="modal" id="editModal" tabindex="-1" role="dialog"
+aria-labelledby="archiveModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header bg-dark text-light">
+        <h5 class="modal-title"
+        id="archiveModalLabel">Sale ID: {{edited.ID}}</h5>
+        <button type="button" class="close text-light"
+        ng-click="toggleEditModal()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <!-- include the form body -->
+      <span ng-include="'/assets/sale_edit_form.html'"></span>
+
+    </div>
+  </div>
+</div>

@@ -1,0 +1,158 @@
+<div class="modal-body">
+    <div class="row">
+        <div class="col-sm-12 w-100 px-4">
+            <form name="itemform" ng-submit="invItemToSaleServicePost()">
+                <div class="form-group row">
+                    <label class="col-sm-4 col-form-label">
+                        <strong>Sale ID:</strong></label
+                    >
+                    <div class="col-sm-8">
+                        <input
+                            type="text"
+                            name="name"
+                            class="form-control"
+                            ng-model="edited.ID"
+                            ng-disabled="true"
+                            required
+                        />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-4 col-form-label">
+                        <strong>Item Name:</strong></label
+                    >
+                    <div class="col-sm-8">
+                        <input
+                            type="text"
+                            name="name"
+                            class="form-control"
+                            ng-model="edited.name"
+                            ng-disabled="true"
+                        />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-4 col-form-label">
+                        <strong>Selling Platform:</strong></label
+                    >
+                    <div class="col-sm-8">
+                        <div class="input-group">
+                            <select
+                                class="form-control"
+                                ng-model="edited.sellingplatID"
+                                ng-options="sellingplat.ID as sellingplat.name for sellingplat in lists.sellingplat"
+                                required
+                            >
+                            </select>
+                        </div>
+                        <div
+                            ng-show="states.addSellingplat"
+                            class="input-group mt-1"
+                        >
+                            <input
+                                type="text"
+                                name="addtest"
+                                class="form-control"
+                                ng-model="addSellingplat.name"
+                                placeholder="Enter New Platform"
+                            />
+                            <span
+                                class="input-group-addon bg-success text-light ml-1 addList"
+                                ng-show="checkAddLength()"
+                                ng-hide="checkAddExist(lists.sellingplat)"
+                                ng-click="invListServicePostPlat()"
+                                >Save</span
+                            >
+                        </div>
+                        <small
+                            ng-show="checkAddExist(lists.sellingplat)"
+                            class="text-danger"
+                            >Already Exists</small
+                        >
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-4 col-form-label">
+                        <strong>Platform Fee:</strong></label
+                    >
+                    <div class="col-sm-4">
+                        <div class="input-group">
+                            <span class="input-group-addon">$</span>
+                            <input
+                                type="number"
+                                step="any"
+                                class="form-control"
+                                ng-model="edited.platformfee"
+                                required
+                            />
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-4 col-form-label">
+                        <strong>Sale Price:</strong></label
+                    >
+                    <div class="col-sm-4">
+                        <div class="input-group">
+                            <span class="input-group-addon">$</span>
+                            <input
+                                type="number"
+                                step="any"
+                                class="form-control"
+                                ng-model="edited.saleprice"
+                                required
+                            />
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-4 col-form-label">
+                        <strong>Shipping Price:</strong></label
+                    >
+                    <div class="col-sm-4">
+                        <div class="input-group">
+                            <span class="input-group-addon">$</span>
+                            <input
+                                type="number"
+                                step="any"
+                                class="form-control"
+                                ng-model="edited.shippingprice"
+                                required
+                            />
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-4 col-form-label">
+                        <strong>Sale Date:</strong></label
+                    >
+                    <div class="col-sm-4">
+                        <input
+                            type="date"
+                            class="form-control"
+                            ng-model="edited.saledate"
+                            required
+                        />
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button
+        type="button"
+        class="btn btn-secondary float-left"
+        ng-click="toggleEditModal()"
+    >
+        Close
+    </button>
+    <button
+        type="button"
+        class="btn btn-primary float-left"
+        ng-disabled="isEditedChanged()"
+        ng-click="invItemToSaleServiceUpdate(edited)"
+    >
+        Save Changes
+    </button>
+</div>
